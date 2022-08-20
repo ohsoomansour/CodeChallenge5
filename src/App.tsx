@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import {BrowserRouter, Switch, Route} from "react-router-dom";
-import Home from './Routes/Components/Home';
-import Tv from './Routes/Tv';
+import Home from './Routes/Components/Movie/Home';
+import Tv from './Routes/Components/Tv/Tv';
 import Search from './Routes/Search';
 import Header from './Routes/Components/Header';
 
@@ -83,13 +83,13 @@ import Header from './Routes/Components/Header';
 function App() {
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Header /> 
       <Switch>
         <Route path="/tv">
           <Tv />
         </Route>
-        <Route path="/search">
+        <Route path={["/search"]}>
           <Search />
         </Route>
         <Route path={["/", "/movies/:movieId"]}>

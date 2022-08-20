@@ -52,7 +52,7 @@
 
   const API_KEY ="e7a6b4de55b190b9bd44f056560c7e68"
   const BASE_PATH = "https://api.themoviedb.org/3"
-
+ //🔹On the / (home) page implement sliders for: Latest movies, Top Rated Movies and Upcoming Movies.
   export default function getMovies() {
     return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}`).then(
       (reponse) => reponse.json()
@@ -78,6 +78,7 @@
   }
 
   //🔹On the /tv page implement sliders for: Latest Shows, Airing Today, Popular, Top Rated.
+
   export function getLatestShowTv(){
     return fetch(`${BASE_PATH}/tv/latest?api_key=${API_KEY}`).then(
       (repsonse) => repsonse.json()
@@ -88,4 +89,25 @@
       (repsonse) => repsonse.json()
     )
   }
+  export function getPopularShowTv(){
+    return fetch(`${BASE_PATH}/tv/popular?api_key=${API_KEY}`).then(
+      (response) => response.json()
+    )
+  }
+
+  export function getTopRatedTv(){
+    return fetch(`${BASE_PATH}/tv/top_rated?api_key=${API_KEY}`).then(
+      (response) => response.json()
+    )
+  }
+  //https://api.themoviedb.org/3/search/multi?api_key=e7a6b4de55b190b9bd44f056560c7e68&language=en-US&query=dune&page=1&include_adult=false
+
+interface IMultiSearch{
+  keyword:string | null;
+}  
+export function getMultiSearch({keyword}:IMultiSearch){
+  return fetch(`${BASE_PATH}/search/multi?api_key=${API_KEY}&language=en-US&query=${keyword}`).then(
+    (repsponse) => repsponse.json()
+  )
+}
   

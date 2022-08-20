@@ -80,16 +80,45 @@ const Info = styled(motion.div)`
     font-weight:900;
   }
 `;
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top:0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity:0;
+`;
 const BigMovie = styled(motion.div)` 
-  position: absolute; 
   width: 40vw; 
   height: 80vh;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
   background-color: ${(props) => props.theme.black.lighter};
   overflow: hidden;
   border-radius: 15px;
+  position:absolute;
+  left:0;
+  right:0;
+  z-index: 500;
+  margin: auto auto;
+`;
+const BigCover = styled.div`
+  width: 100%;
+  height: 70%;;
+  background-size: cover;
+  background-position:center center ;
+`;
+const BigTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  font-size:40px;
+  top: -80px;
+  position: relative;
+  padding:20px;
+`;
+const BigOverview = styled.p`
+  color: ${(props => props.theme.white.lighter)};
+  position: relative;
+  top: -10px;
+  padding: 20px;
+  font-size: 25px;
 `;
 const BoxVariants = {
   normal:{
@@ -136,6 +165,7 @@ export default function UpComingMovies() {
     history.push(`/movies/${movieId}`);
   };
   const bigMovieMatch = useRouteMatch<{movieId:string}>("/movies/:movieId")
+  const { scrollY, scrollYProgress } = useViewportScroll();
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev)
@@ -151,9 +181,9 @@ export default function UpComingMovies() {
   const {data:UpcomingData, isLoading:UpcomingLoading} = useQuery<IGetMoviesResult>(
     ["movies", "UpComing"],
     getUpcomingMovies)
-    //console.log(UpcomingData)
 
-    
+    const onOverlayClick = () => history.goBack(); // history.push("/")
+  const clickedMovie = bigMovieMatch?.params.movieId && UpcomingData?.results.find(movie => movie.id +"" === bigMovieMatch.params.movieId);
 
     return(
     <Wrapper>
@@ -196,6 +226,36 @@ export default function UpComingMovies() {
         </AnimatePresence>
         
       </Slider>
+      <AnimatePresence>
+        {bigMovieMatch ? (
+          <>
+            <Overlay
+             onClick={onOverlayClick} 
+             animate={{opacity: 1}}
+             exit={{opacity: 0}}
+            />
+            <BigMovie
+              layoutId={bigMovieMatch.params.movieId } 
+              style={{ top: scrollY.get() }}
+            >
+            {clickedMovie &&( 
+              <>
+                <BigCover
+                  style={{
+                    backgroundImage: `linear-gradient(to top, black, transparent),url(${makeImagePath(
+                      clickedMovie.poster_path,
+                       "w500"
+                    )})`
+                  }}
+                />
+                <BigTitle>{clickedMovie?.title}</BigTitle>
+                <BigOverview>{clickedMovie.overview}</BigOverview>
+             </>
+            )}
+            </BigMovie>
+          </>
+        ) : null}
+      </AnimatePresence>
     </>  
       )}
     </Wrapper>  

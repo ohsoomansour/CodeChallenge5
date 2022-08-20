@@ -120,7 +120,7 @@ const navVariants = {
   },
 }
 export default function Header() {
-  const history = useHistory();
+  
   const homeMatch = useRouteMatch("/");
   const tvMatch = useRouteMatch("/tv");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -155,6 +155,7 @@ export default function Header() {
   }, [scrollY, navAnimation])
   //console.log(homeMatch, tvMatch);
   const {register, handleSubmit} = useForm<IForm>();
+  const history = useHistory();
   const Valid = (data:IForm) => {
     //console.log(data);
     history.push(`/search?keyword=${data.keyword}`);
@@ -187,7 +188,7 @@ export default function Header() {
     </Col>
 
     <Col>
-      <Search onSubmit={handleSubmit(Valid)}>
+      <Search onSubmit={handleSubmit(Valid)}> 
         <motion.svg
           onClick={toggleSearch}
           animate={{ x: searchOpen ? -240 : 0 }}

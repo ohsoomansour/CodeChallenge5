@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { motion, AnimatePresence, useViewportScroll, useScroll  } from "framer-motion";
 import { useQuery } from "react-query";
-import { getLatestMovies, getLatestShowTv, getTopRatedMoives, ITopRatedMovies } from "../../api";
+import { getLatestShowTv } from "../../api";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { makeImagePath } from "../../utils";
 
 const Wrapper = styled.div`
   position:relative;
-  top:1000px;
+  top:1500px;
 
 `
 const Banner = styled.div<{bgPhoto:string}>`
@@ -119,14 +119,20 @@ const infoVariants ={
     }
   }
 }
+interface INetworks{
+  id: number;
+  name: string;
+  logo_path: string;
+  origin_country: string;
+}
 
 export interface ILatestTv {
   id:number;
-  overview:string;
+  overview:string | null;
   poster_path:string | null;
   backdrop_path:string | null;
   status:string;
-  last_episode_to_air:{
+  next_episode_to_air:{
     air_date: string;
     episode_number: number;
     id: number;
@@ -134,6 +140,8 @@ export interface ILatestTv {
     overview: string;
     
   }
+  networks:INetworks[];
+
   name:string;
 }
 
@@ -156,15 +164,15 @@ export default function LatestTvShow() {
     }
   }
   const {data:LatestTvData, isLoading:LatestLoading} = useQuery<ILatestTv>(
-    ["movies", "LatestTv"],
+    ["Tv", "LatestTv"],
     getLatestShowTv)
-    //console.log(LatestTvData);
-
+    //console.log(LatestTvData, LatestLoading );
+    
     return(
     <Wrapper>
       { LatestLoading ? (<Loader>loading...</Loader>) : (
     <>  
-      <Banner onClick={increaseIndex} bgPhoto={makeImagePath(LatestTvData?.poster_path|| "")}>
+      <Banner onClick={increaseIndex} bgPhoto={makeImagePath(LatestTvData?.backdrop_path|| "")}>
 
       </Banner >
       <Slider>

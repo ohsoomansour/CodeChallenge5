@@ -9,20 +9,20 @@ import { makeImagePath } from "../../utils";
 
 const Wrapper = styled.div`
   position:relative;
-  top:200px;
-  position:relative;
-  top:700px;
+  top:1500px;
 
 `
 const Banner = styled.div<{bgPhoto:string}>`
-  height:80vh;
+  position:relative;
+  top:20px;
+  height:100vh;
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
-  
   padding: 60px;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)) ,url(${(props) => props.bgPhoto});
   backgound-size:cover;
+  background-position:center center;
 `;
 const Title = styled.h2`
   font-size: 60px;
@@ -204,7 +204,6 @@ export default function AiringTodayTv() {
   const {data:AiringData, isLoading:AirLoading} = useQuery<IAiringToday>(
     ["TvShow", "AiringToday"],
     getAiringTodayShowTv)
-  console.log(AiringData, AirLoading );
   const onOverlayClick = () => history.goBack(); // history.push("/")
   const clickedMovie = bigMovieMatch?.params.movieId && AiringData?.results.find(movie => movie.id +"" === bigMovieMatch.params.movieId);
     return(
