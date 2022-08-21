@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/static/js/main.b910185e.js",
-    "index.html": "/index.html",
-    "main.b910185e.js.map": "/static/js/main.b910185e.js.map"
+    "main.js": "/CodeChallenge5/static/js/main.2d71ec53.js",
+    "index.html": "/CodeChallenge5/index.html",
+    "main.2d71ec53.js.map": "/CodeChallenge5/static/js/main.2d71ec53.js.map"
   },
   "entrypoints": [
-    "static/js/main.b910185e.js"
+    "static/js/main.2d71ec53.js"
   ]
 }
