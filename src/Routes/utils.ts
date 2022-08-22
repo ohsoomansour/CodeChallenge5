@@ -6,7 +6,7 @@
 */
 // 🚧테스트  https://image.tmdb.org/t/p/original/tjE2nRjHrMCG3QNcpgjcUjB0a0X.jpg
 export function makeImagePath(id:string , format?:string ) {
-  return `https://image.tmdb.org/t/p/${format?format : "original"}/${id}`
+  return `https://image.tmdb.org/t/p/${format? format : "original"}/${id}`
 }
 
 

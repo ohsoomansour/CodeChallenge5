@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {motion, useAnimation, useViewportScroll, useScroll} from "framer-motion";
 import {Link, useRouteMatch, useHistory } from "react-router-dom" 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 /* 
@@ -28,11 +28,14 @@ interface IForm {
 
 const Nav = styled(motion.nav)`
   display: flex;
+  position: fixed;
+  z-index:500;
+  top:0;
   justify-content: space-between;
   align-items: center;
-  position: fixed; 
+   
   width: 100%;
-  top:0;
+  
   height: 70px;
   font-size: 14px;
   padding: 20px 60px;
@@ -120,7 +123,6 @@ const navVariants = {
   },
 }
 export default function Header() {
-  
   const homeMatch = useRouteMatch("/");
   const tvMatch = useRouteMatch("/tv");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -139,7 +141,7 @@ export default function Header() {
     setSearchOpen((prev) => !prev);
   }
   const navAnimation = useAnimation();
-  const {scrollY, scrollYProgress} = useViewportScroll();
+  const {scrollY, scrollYProgress} = useScroll();
   
   useEffect(() => {
     scrollY.onChange(() => {
@@ -162,6 +164,7 @@ export default function Header() {
   };
   return (
   <Nav
+
    variants={navVariants}
    initial="top"
    animate={navAnimation}

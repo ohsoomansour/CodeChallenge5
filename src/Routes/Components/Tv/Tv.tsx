@@ -5,10 +5,12 @@ import PopularTv from "./PopularTv";
 import TopRatedTv from "./TopRatedTv";
 
 const Wrapper = styled.div`
-  display:flex;
-  flex-direction:column;
-  height:350vh;
-  
+  height:100vh;
+  background: black;
+  width:100vw;
+  position:relative;
+  top:70px;
+
 `
 
 export default function Tv() {

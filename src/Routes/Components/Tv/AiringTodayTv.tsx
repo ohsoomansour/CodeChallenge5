@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll, useScroll  } from "framer-motion";
+import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
 import { useQuery } from "react-query";
 import { getAiringTodayShowTv} from "../../api";
 import { useState } from "react";
@@ -9,29 +9,9 @@ import { makeImagePath } from "../../utils";
 
 const Wrapper = styled.div`
   position:relative;
-  top:1500px;
-
+  background-color:black;
+  top:150px;
 `
-const Banner = styled.div<{bgPhoto:string}>`
-  position:relative;
-  top:20px;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)) ,url(${(props) => props.bgPhoto});
-  backgound-size:cover;
-  background-position:center center;
-`;
-const Title = styled.h2`
-  font-size: 60px;
-  margin-bottom: 10px;
-`;
-const Ovierview = styled.p`
-  font-size: 36px;
-  width: 50%;
-`;
 
 const Loader = styled.div`
   height: 20vh;
@@ -41,19 +21,25 @@ const Loader = styled.div`
 `;
 const Slider = styled.div`
   position: relative;
-  top:-800px;
+  
 `;
 const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
-  position: absolute; 
-  top:-200px;
-  margin-bottom: 50px;
-  
-  width: 100%;
+  position: absolute;
+  left:0;
+  right:0;
+  width: 96%;
+  margin:0 auto;
 `;
-
+const NexBtn = styled.button`
+  position:relative;
+  width:50px;
+  height:300px;
+  cursor: pointer;
+  font-size:45px;
+`
 const Box = styled(motion.div)<{bgPhoto:string}>`
   height: 300px;
   background-color: white;
@@ -94,19 +80,17 @@ const Overlay = styled(motion.div)`
   opacity:0;
 `;
 const BigMovie = styled(motion.div)` 
-  position: absolute; 
   width: 40vw; 
   height: 80vh;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
   background-color: ${(props) => props.theme.black.lighter};
   overflow: hidden;
   border-radius: 15px;
+  position:relative;
+  margin: auto auto;
 `;
 const BigCover = styled.div`
   width: 100%;
-  height: 70%;;
+  height: 200px;
   background-size: cover;
   background-position:center center ;
 `;
@@ -187,7 +171,7 @@ export default function AiringTodayTv() {
     history.push(`/movies/${movieId}`);
   };
   const bigMovieMatch = useRouteMatch<{movieId:string}>("/movies/:movieId")
-  const { scrollY, scrollYProgress } = useScroll();
+  const { scrollY  } = useViewportScroll();
 
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -210,11 +194,8 @@ export default function AiringTodayTv() {
     <Wrapper>
       { AirLoading ? (<Loader>loading...</Loader>) : (
     <>  
-     <Banner onClick={increaseIndex} bgPhoto={makeImagePath(AiringData?.results[0].poster_path|| "")} >    
-      <Title>{AiringData?.results[0].original_name}</Title>
-      <Ovierview>{AiringData?.results[0].overview}</Ovierview>
-    </Banner> 
-      <Slider>
+
+      <Slider >
         <AnimatePresence initial={false}  onExitComplete={toggleLeaving}  >
           <Row 
             key={index} 
@@ -224,7 +205,7 @@ export default function AiringTodayTv() {
             exit="exit"
             transition={{ type: "tween", duration:1  }}
           >
-            {AiringData?.results.slice(1).slice(index*offset, index*offset+offset).map((movie) => (
+            {AiringData?.results.slice(index*offset, index*offset+offset).map((movie) => (
               <Box 
                 layoutId={movie.id + ""}
                 key={movie.id}
@@ -244,7 +225,7 @@ export default function AiringTodayTv() {
             
           </Row>
         </AnimatePresence>
-        
+        <NexBtn onClick={increaseIndex}>◀</NexBtn>  
       </Slider>
       <AnimatePresence>
         {bigMovieMatch ? (
@@ -256,7 +237,7 @@ export default function AiringTodayTv() {
             />
             <BigMovie
               layoutId={bigMovieMatch.params.movieId } 
-              style={{ top: scrollY.get() + 100 }}
+              style={{ bottom: scrollY.get() - 200 }}
             >
             {clickedMovie &&( 
               <>

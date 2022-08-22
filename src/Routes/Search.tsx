@@ -6,10 +6,11 @@ import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { makeImagePath } from "./utils";
 import { getMultiSearch } from "./api";
+import { useRecoilState } from "recoil";
+import { SearchAtom } from "../recoil";
 const Wrapper = styled.div`
   position:relative;
-  top:1500px;
-
+  top:100px;
 `
 const Banner = styled.div<{bgPhoto:string}>`
   position:relative;
@@ -105,7 +106,7 @@ const BigMovie = styled(motion.div)`
 `;
 const BigCover = styled.div`
   width: 100%;
-  height: 70%;;
+  height: 70%;
   background-size: cover;
   background-position:center center ;
 `;
@@ -203,11 +204,14 @@ export default function Search() {
   //console.log(location)
   const keyword = new URLSearchParams(location.search).get("keyword")
   //console.log(keyword)
+  const [searchKey, useSearchKey] = useRecoilState(SearchAtom);
+  useSearchKey(keyword + "")
+  //console.log(searchKey)
   const history = useHistory();
   const onBoxClicked = (movieId:number) => {
     history.push(`/movies/${movieId}`);
   };
-  const bigMovieMatch = useRouteMatch<{movieId:string}>("/movies/:movieId")
+
   const { scrollY, scrollYProgress } = useScroll();
 
   const [index, setIndex] = useState(0);
@@ -225,10 +229,12 @@ export default function Search() {
   const {data:SearchData, isLoading:SearchLoading} = useQuery<IMultiSearch>(
     ["Search", "MultiSearch"],
     () => getMultiSearch({keyword}))
-    //console.log(SearchData) ⭕
+    //console.log(SearchData) 
   const onOverlayClick = () => history.goBack(); // history.push("/")
-  const clickedMovie = bigMovieMatch?.params.movieId && SearchData?.results.find(movie => movie.id +"" === bigMovieMatch.params.movieId);
-  
+  const bigMovieMatch = useRouteMatch<{movieId:string}>("/movies/:movieId")
+  const clickedMovie = bigMovieMatch?.params && 
+    SearchData?.results.find(movie => movie.id +"" === bigMovieMatch.params.movieId);
+  console.log(clickedMovie, SearchData )//minoin movie id: 438148
   return(
     <Wrapper>
       { SearchLoading ? (<Loader>loading...</Loader>) : (

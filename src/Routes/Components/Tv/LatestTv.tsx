@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll, useScroll  } from "framer-motion";
+import { motion, AnimatePresence, useViewportScroll  } from "framer-motion";
 import { useQuery } from "react-query";
 import { getLatestShowTv } from "../../api";
 import { useState } from "react";
@@ -8,18 +8,10 @@ import { makeImagePath } from "../../utils";
 
 const Wrapper = styled.div`
   position:relative;
-  top:1500px;
-
+  background-color:black;
+  top:1250px;
 `
-const Banner = styled.div<{bgPhoto:string}>`
-  height:80vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)) ,url(${(props) => props.bgPhoto});
-  backgound-size:cover;
-`;
+
 const Loader = styled.div`
   height: 20vh;
   display: flex;
@@ -28,16 +20,14 @@ const Loader = styled.div`
 `;
 const Slider = styled.div`
   position: relative;
-  top:-600px;
+  
+  
 `;
 const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
   position: absolute; 
-  top:-200px;
-  margin-bottom: 50px;
-  
   width: 100%;
 `;
 
@@ -72,17 +62,7 @@ const Info = styled(motion.div)`
     font-weight:900;
   }
 `;
-const BigMovie = styled(motion.div)` 
-  position: absolute; 
-  width: 40vw; 
-  height: 80vh;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  background-color: ${(props) => props.theme.black.lighter};
-  overflow: hidden;
-  border-radius: 15px;
-`;
+
 const BoxVariants = {
   normal:{
     scale: 1,
@@ -169,12 +149,10 @@ export default function LatestTvShow() {
     //console.log(LatestTvData, LatestLoading );
     
     return(
-    <Wrapper>
+    <Wrapper onClick={increaseIndex}>
       { LatestLoading ? (<Loader>loading...</Loader>) : (
     <>  
-      <Banner onClick={increaseIndex} bgPhoto={makeImagePath(LatestTvData?.backdrop_path|| "")}>
 
-      </Banner >
       <Slider>
         <AnimatePresence initial={false}  onExitComplete={toggleLeaving}  >
           <Row 

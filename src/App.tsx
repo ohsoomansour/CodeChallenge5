@@ -5,6 +5,8 @@ import Home from './Routes/Components/Movie/Home';
 import Tv from './Routes/Components/Tv/Tv';
 import Search from './Routes/Search';
 import Header from './Routes/Components/Header';
+import { useRecoilValue } from 'recoil';
+import { SearchAtom } from './recoil';
 
 
 /*#Animation - ※https://www.framer.com/motion/
@@ -81,7 +83,8 @@ import Header from './Routes/Components/Header';
 
 
 function App() {
-
+  const targetSearch = useRecoilValue(SearchAtom)
+  
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Header /> 
@@ -89,7 +92,7 @@ function App() {
         <Route path="/tv">
           <Tv />
         </Route>
-        <Route path={["/search"]}>
+        <Route path={["/search",`search?keyword=${targetSearch}` ]}>
           <Search />
         </Route>
         <Route path={["/", "/movies/:movieId"]}>

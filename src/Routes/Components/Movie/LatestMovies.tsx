@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll, useScroll  } from "framer-motion";
+import { motion, AnimatePresence, useViewportScroll  } from "framer-motion";
 import { useQuery } from "react-query";
 import { getLatestMovies } from "../../api";
 import { useState } from "react";
@@ -8,37 +8,24 @@ import { makeImagePath } from "../../utils";
 
 const Wrapper = styled.div`
   position:relative;
-  top:1000px;
-
+  top:250px;
+  height:30%;
 `
-const Banner = styled.div<{bgPhoto:string}>`
-  height:80vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)) ,url(${(props) => props.bgPhoto});
-  backgound-size:cover;
-`;
 const Loader = styled.div`
-  height: 20vh;
+  height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 const Slider = styled.div`
   position: relative;
-  top:-600px;
 `;
 const Row = styled(motion.div)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
-  position: absolute; 
-  top:-200px;
+  position: relative; 
   margin-bottom: 50px;
-  
-  width: 100%;
 `;
 
 const Box = styled(motion.div)<{bgPhoto:string}>`
@@ -81,7 +68,7 @@ const Overlay = styled(motion.div)`
   opacity:0;
 `;
 const BigMovie = styled(motion.div)` 
-  position: absolute; 
+  position: fixed;
   width: 40vw; 
   height: 80vh;
   left: 0;
@@ -93,7 +80,7 @@ const BigMovie = styled(motion.div)`
 `;
 const BigCover = styled.div`
   width: 100%;
-  height: 70%;;
+  height: 70%;
   background-size: cover;
   background-position:center center ;
 `;
@@ -165,7 +152,7 @@ export default function LatestMovies() {
     history.push(`/movies/${movieId}`);
   };
   const bigMovieMatch = useRouteMatch<{movieId:string}>("/movies/:movieId")
-  const { scrollY, scrollYProgress } = useViewportScroll();
+  const { scrollY } = useViewportScroll();
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev)
@@ -184,10 +171,9 @@ export default function LatestMovies() {
   const onOverlayClick = () => history.goBack(); // history.push("/")
   const clickedMovie = bigMovieMatch?.params.movieId   
     return(
-    <Wrapper>
+    <Wrapper onClick={increaseIndex}>
       { LatestLoading ? (<Loader>loading...</Loader>) : (
     <>  
-      <Banner onClick={increaseIndex} bgPhoto={makeImagePath(LatestData?.poster_path|| "")}></Banner >
       <Slider>
         <AnimatePresence initial={false}  onExitComplete={toggleLeaving}  >
           <Row 
@@ -230,7 +216,7 @@ export default function LatestMovies() {
             />
             <BigMovie
               layoutId={bigMovieMatch.params.movieId } 
-              style={{ top: scrollY.get() }}
+              style={{ bottom: scrollY.get() - 700 }}
             >
             {clickedMovie &&( 
               <>
